@@ -7,13 +7,19 @@ set(ARCH_FOR_cortex-m4     armv7e-m    )
 set(ARCH_FOR_cortex-m23    armv8-m.base)
 set(ARCH_FOR_cortex-m33    armv8-m.main)
 
+if (${GCC_M_CPU} EQUAL "cortex-m23" OR ${GCC_M_CPU} EQUAL "cortex-m33")
+	zephyr_cc_option(-mcmse)
+	set(MCMSE "-mcmse")
+endif()
+
 set_property(GLOBAL PROPERTY E_KERNEL_ENTRY  -e${CONFIG_KERNEL_ENTRY})
 
 if(ARCH_FOR_${GCC_M_CPU})
-    set(ARCH_FLAG -march=${ARCH_FOR_${GCC_M_CPU}})
+#    set(ARCH_FLAG -march=${ARCH_FOR_${GCC_M_CPU}})
 endif()
 
 zephyr_compile_options(
+  ${MCMSE}
   -mabi=aapcs
   ${ARCH_FLAG}
   )
