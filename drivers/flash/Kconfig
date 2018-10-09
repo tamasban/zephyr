@@ -80,6 +80,24 @@ config SOC_FLASH_NIOS2_QSPI_DEV_NAME
 	help
 	  Specify the device name for the QSPI flash driver.
 
+config SOC_FLASH_MPS2
+	bool "MPS2 flash driver"
+	depends on FLASH && SOC_MPS2_AN521
+	default n
+	select FLASH_HAS_PAGE_LAYOUT
+	select FLASH_HAS_DRIVER_ENABLED
+	help
+	  This is a fake driver for MPS2 board. Because MPS2 has no embedded flash
+	  memory. There is an SRAM mounted to the 0x0 address. This drivers just
+	  simulates the API of flash driver, but it operates on code SRAM memory.
+
+config SOC_FLASH_MPS2_DEV_NAME
+	string "MPS2 flash device name"
+	depends on SOC_FLASH_MPS2
+	default "MPS2_FLASH"
+	help
+	  Specify the device name for the flash driver.
+
 source "drivers/flash/Kconfig.qmsi"
 
 source "drivers/flash/Kconfig.stm32"

@@ -13,4 +13,11 @@ config NUM_IRQS
 	int
 	default 96
 
+if FLASH
+
+config SOC_FLASH_MPS2
+	def_bool y
+
+endif # FLASH
+
 endif

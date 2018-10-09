@@ -21,12 +21,8 @@
 	};
 
 	sram0: memory {
-		compatible = "mmio-sram";
-		reg = <0x28100000 0x100000>;
-	};
-
-	flash0: flash {
-		reg = <0x00100000 0x1ffc00>;
+			compatible = "mmio-sram";
+			reg = <0x28000000 0x200000>;
 	};
 
 	soc {
@@ -156,6 +152,53 @@
 			#size-cells = <0>;
 			reg = <0x5020d000 0x1000>;
 			label = "I2C_SHIELD1";
+		};
+
+		flash-controller@4001E000 {
+				compatible = "mps2,flash-stub";
+				reg = <0x4001E000 0x550>;
+
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				label="MPS2_FLASH_DRV_NAME";
+
+				flash0: flash@0 {
+					label = "MPS2_FLASH";
+					reg = <0x00000000 0x400000>;
+					erase-block-size = <0x2000>;
+					write-block-size = <1>;
+				};
+		};
+	};
+};
+
+&flash0 {
+	/*
+	 * For more information, see:
+	 * http://docs.zephyrproject.org/devices/dts/flash_partitions.html
+	 */
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x00000000 0x00080000>;
+			read-only;
+		};
+		slot0_partition: partition@800000 {
+			label = "image-0";
+			reg = <0x00080000 0x00100000>;
+		};
+		slot1_partition: partition@1800000 {
+			label = "image-1";
+			reg = <0x00180000 0x00100000>;
+		};
+		scratch_partition: partition@280000 {
+			label = "image-scratch";
+			reg = <0x00280000 0x00100000>;
 		};
 	};
 };
